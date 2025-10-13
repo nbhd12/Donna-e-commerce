@@ -1,4 +1,4 @@
-import pool from '../config/Database';
+import pool from '../Database';
 
 export interface Product {
   id?: number;
