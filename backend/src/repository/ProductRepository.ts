@@ -1,7 +1,7 @@
 import { Product } from "../models/ProductModel";
 
 export class ProductRepository {
-  // временные фейковые данные (позже заменишь на БД PostgreSQL)
+
   private products: Product[] = [
     {
       id: 1,
@@ -29,12 +29,11 @@ export class ProductRepository {
     },
   ];
 
-  // получить все товары
+
   public findAll(): Product[] {
     return this.products;
   }
 
-  // найти товар по ID
   public findById(id: number): Product | undefined {
     return this.products.find((p) => p.id === id);
   }
