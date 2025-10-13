@@ -1,23 +1,9 @@
 import pool from '../Database';
-
-export interface Product {
-  id?: number;
-  name: string;
-  description: string;
-  price: number;
-  dimension?: string; 
-  faq?: string;        
-  stock: number;
-  image?: string;
-  category_id: number;
-  quantity?: number;      
-  category_name?: string;
-  created_at?: Date;
-}
+import { Product } from '../models/Product';
 
 export class ProductModel {
   
-  // search tous les produits
+  // search all products
   static async getAll(): Promise<Product[]> {
     const result = await pool.query(
       `SELECT p.*, c.name as category_name 
