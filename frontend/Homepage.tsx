@@ -74,6 +74,9 @@ const Home: React.FC = () => {
   }
 
   return (
+
+  // Main banner
+
     <div className="home-page">
       
       <section className="hero-banner">
@@ -81,6 +84,8 @@ const Home: React.FC = () => {
           <h1>Banner</h1>
         </div>
       </section>
+
+// new Arrivals
 
       <section className="section">
         <h2 className="section-title">NEW ARRIVALS</h2>
@@ -92,6 +97,9 @@ const Home: React.FC = () => {
               key={product.id} 
               className="product-card-simple"
             >
+
+              //pic of product
+
               <div className="product-image-simple">
                 <img 
                   src={product.image || '/placeholder.png'} 
@@ -102,6 +110,8 @@ const Home: React.FC = () => {
                 />
               </div>
               
+              // name and price
+
               <div className="product-info-simple">
                 <p className="product-name-simple">{product.name}</p>
                 <p className="product-price-simple">€{product.price.toFixed(2)}</p>
@@ -110,6 +120,7 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
+
 
       <section className="section">
         <h2 className="section-title">TOP SELLING</h2>
@@ -156,7 +167,7 @@ const Home: React.FC = () => {
                   alt={category.name}
                 />
               </div>
-              
+              // category name
               <div className="style-overlay">
                 <span className="style-icon">{getCategoryIcon(category.name)}</span>
                 <h3 className="style-name">{category.name}</h3>
@@ -165,6 +176,8 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
+      
+// newsletter
 
       <section className="newsletter-section">
         <div className="newsletter-container">
