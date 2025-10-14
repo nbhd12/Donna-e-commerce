@@ -10,7 +10,6 @@ const Home: React.FC = () => {
   const [topSelling, setTopSelling] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('');
 
 
   // search data to render page
@@ -46,16 +45,7 @@ const Home: React.FC = () => {
     fetchData();
   }, []); 
 
- // function for newsletter
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); 
-    
-    if (email) {
-      alert(`Email cadastrado: ${email}`);
-      setEmail(''); 
-    }
-  };
 
   // pics for types of bags
 
@@ -69,38 +59,46 @@ const Home: React.FC = () => {
     return icons[categoryName] || 'Purses';
   };
 
+  // Show loading while loading page
+
   if (loading) {
     return <div className="loading">Charging...</div>;
   }
 
-  return (
+ return (
+    <div className="home-container">
 
-  // Main banner
-
-    <div className="home-page">
+      //main banner
       
-      <section className="hero-banner">
-        <div className="banner-content">
-          <h1>Banner</h1>
-        </div>
+      <section className="banner-hero">
+        <img 
+          src="/images/banner-principal.jpg" 
+          alt="Banner Principal"
+          className="banner-image"
+          onError={(e) => {
+            // Se a imagem não carregar, mostra um banner com cor
+            (e.target as HTMLImageElement).style.display = 'none';
+            (e.target as HTMLImageElement).parentElement!.style.background = 
+              'linear-gradient(135deg, #9b7f9f 0%, #7d5f7f 100%)';
+          }}
+        />
       </section>
 
-// new Arrivals
 
-      <section className="section">
-        <h2 className="section-title">NEW ARRIVALS</h2>
+// new arrivals
+      <section className="content-section">
+        <h2 className="section-heading">NEW ARRIVALS</h2>
         
-        <div className="products-row">
+        <div className="products-grid">
           {newArrivals.map((product) => (
             <Link 
               to={`/product/${product.id}`} 
               key={product.id} 
-              className="product-card-simple"
+              className="product-item"
             >
 
-              //pic of product
-
-              <div className="product-image-simple">
+              // image/pic
+              <div className="product-img">
                 <img 
                   src={product.image || '/placeholder.png'} 
                   alt={product.name}
@@ -109,30 +107,31 @@ const Home: React.FC = () => {
                   }}
                 />
               </div>
-              
-              // name and price
 
-              <div className="product-info-simple">
-                <p className="product-name-simple">{product.name}</p>
-                <p className="product-price-simple">€{product.price.toFixed(2)}</p>
+              // info
+              
+              <div className="product-details">
+                <p className="product-title">{product.name}</p>
+                <p className="product-cost">€{product.price.toFixed(2)}</p>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
+      // top selling
 
-      <section className="section">
-        <h2 className="section-title">TOP SELLING</h2>
+      <section className="content-section">
+        <h2 className="section-heading">TOP SELLING</h2>
         
-        <div className="products-row">
+        <div className="products-grid">
           {topSelling.map((product) => (
             <Link 
               to={`/product/${product.id}`} 
               key={product.id} 
-              className="product-card-simple"
+              className="product-item"
             >
-              <div className="product-image-simple">
+              <div className="product-img">
                 <img 
                   src={product.image || '/placeholder.png'} 
                   alt={product.name}
@@ -142,67 +141,46 @@ const Home: React.FC = () => {
                 />
               </div>
               
-              <div className="product-info-simple">
-                <p className="product-name-simple">{product.name}</p>
-                <p className="product-price-simple">€{product.price.toFixed(2)}</p>
+              <div className="product-details">
+                <p className="product-title">{product.name}</p>
+                <p className="product-cost">€{product.price.toFixed(2)}</p>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="section">
-        <h2 className="section-title">BROWSE BY STYLE</h2>
+      //browse by style
+
+      <section className="content-section">
+        <h2 className="section-heading">BROWSE BY STYLE</h2>
         
-        <div className="styles-grid">
+        <div className="categories-grid">
           {categories.map((category) => (
             <Link 
-              to={`/categories`} 
+              to="/categories" 
               key={category.id} 
-              className="style-card"
+              className="category-box"
             >
-              <div className="style-image">
+              //background image
+
+              <div className="category-bg">
                 <img 
-                  src={category.image || '/image.png'} 
+                  src={category.image || '/placeholder.png'} 
                   alt={category.name}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/placeholder.png';
+                  }}
                 />
               </div>
-              // category name
-              <div className="style-overlay">
-                <span className="style-icon">{getCategoryIcon(category.name)}</span>
-                <h3 className="style-name">{category.name}</h3>
+              
+              //text over image
+              <div className="category-info">
+                <span className="category-emoji">{getCategoryIcon(category.name)}</span>
+                <h3 className="category-label">{category.name}</h3>
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-      
-// newsletter
-
-      <section className="newsletter-section">
-        <div className="newsletter-container">
-          <h2 className="newsletter-title">
-            STAY UPTO DATE ABOUT<br />
-            OUR LATEST OFFERS
-          </h2>
-          
-          <form onSubmit={handleNewsletterSubmit} className="newsletter-form">
-            <div className="input-group">
-              <span className="input-icon">✉️</span>
-              <input 
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="newsletter-input"
-              />
-            </div>
-            
-            <button type="submit" className="newsletter-button">
-              Subscribe to Newsletter
-            </button>
-          </form>
         </div>
       </section>
 
