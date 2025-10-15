@@ -1,58 +1,48 @@
-
- import "./Footer.css"
-
-export function Newsletter() {
-  return (
-    <section className="newsletter">
-      <h3>Stay up to date about our latest offers</h3>
-      <div className="subscribe">
-        <input type="email" placeholder="Enter your email" />
-        <button>Subscribe to Newsletter</button>
-      </div>
-    </section>
-  );
-}
-
+import "./Footer.css";
+import instagram from "../../assets/instagram.svg";
+// import twitter from "../../assets/icons/twitter.svg";
+// import facebook from "../../assets/icons/facebook.svg";
+// import youtube from "../../assets/icons/youtube.svg";
+// import visa from "../../assets/visa.png";
+// import paypal from "../../assets/paypal.png";
+// import mastercard from "../../assets/mastercard.png";
 
 export function Footer() {
   return (
     <footer className="footer">
-      <div className="social">
-        <p>Follow us:</p>
-        <div className="icons">
-          <img src="/facebook.svg" alt="Facebook" />
-          <img src="/instagram.svg" alt="Instagram" />
-          <img src="/twitter.svg" alt="Twitter" />
+      <div className="footer-top">
+        <div className="footer-left">
+          <h2 className="footer-title">DONNA</h2>
+          <p className="footer-text">
+            We have bags that suit your style and which you’re proud to wear.
+            From women to women.
+          </p>
+
+          <div className="social-icons">
+            <a href="#"><img src={instagram} alt="Instagram" /></a>
+            {/* <a href="#"><img src={twitter} alt="Twitter" /></a> */}
+            {/* <a href="#"><img src={facebook} alt="Facebook" /></a> */}
+            {/* <a href="#"><img src={youtube} alt="YouTube" /></a> */}
+          </div>
+        </div>
+
+        <div className="footer-right">
+          <ul className="footer-menu">
+            <li><a href="#">Company</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Resources</a></li>
+          </ul>
         </div>
       </div>
 
-      <div className="footer-links">
-        <div>
-          <h4>Company</h4>
-          <p>About</p>
-          <p>Careers</p>
+      <div className="footer-bottom">
+        <p>© 2025 DONNA. All rights reserved.</p>
+        <div className="payment-icons">
+          {/* <img src={visa} alt="Visa" /> */}
+          {/* <img src={paypal} alt="PayPal" /> */}
+          {/* <img src={mastercard} alt="Mastercard" /> */}
         </div>
-        <div>
-          <h4>Help</h4>
-          <p>Contact Us</p>
-          <p>Shipping</p>
-        </div>
-        <div>
-          <h4>FAQ</h4>
-          <p>Returns</p>
-          <p>Order Status</p>
-        </div>
-        <div>
-          <h4>Resources</h4>
-          <p>Blog</p>
-          <p>Affiliate</p>
-        </div>
-      </div>
-
-      <div className="payments">
-        <img src="/visa.svg" alt="Visa" />
-        <img src="/paypal.svg" alt="PayPal" />
-        <img src="/applepay.svg" alt="Apple Pay" />
       </div>
     </footer>
   );

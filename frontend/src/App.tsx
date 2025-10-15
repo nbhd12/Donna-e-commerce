@@ -1,7 +1,9 @@
-import { CatalogPage } from "./pages/catalogPages/CatalogPage";
+import { CatalogPage } from "./pages/catalog/CatalogPage";
 
-function App() {
-  return <CatalogPage />;
+export default function App() {
+  return (
+  
+  <CatalogPage />);
 }
 
-export default App;
+
