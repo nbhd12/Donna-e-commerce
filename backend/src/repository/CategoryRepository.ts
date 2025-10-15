@@ -1,4 +1,4 @@
-import { Product } from "../models/ProductModel";
+import { Product } from "../types/ProductModel";
 
 interface Category {
   id: number;
@@ -13,12 +13,12 @@ export class CategoryRepository {
     { id: 3, name: "Totes", description: "Grands sacs pratiques pour le travail" },
   ];
 
-  
+  // @tatiana, I renamed imageUrl to "image" to match Ingrid's code, i also added another parameter called 'stock' to match ingrid's model
   private products: Product[] = [
-    { id: 1, name: "Everyday Handbag", description: "Sac à main élégant", price: 140, imageUrl: "https://placehold.co/300x300", category: "Handbags" },
-    { id: 2, name: "Mini Clutch", description: "Petit sac de soirée", price: 95, imageUrl: "https://placehold.co/300x300", category: "Clutch" },
-    { id: 3, name: "Business Tote", description: "Sac pratique et élégant", price: 180, imageUrl: "https://placehold.co/300x300", category: "Totes" },
-    { id: 4, name: "Classic Handbag", description: "Style intemporel", price: 160, imageUrl: "https://placehold.co/300x300", category: "Handbags" },
+    { id: 1, name: "Everyday Handbag", description: "Sac à main élégant", price: 140, image: "https://placehold.co/300x300", category: "Handbags", stock:1 },
+    { id: 2, name: "Mini Clutch", description: "Petit sac de soirée", price: 95, image: "https://placehold.co/300x300", category: "Clutch", stock:1 },
+    { id: 3, name: "Business Tote", description: "Sac pratique et élégant", price: 180, image: "https://placehold.co/300x300", category: "Totes", stock:1 },
+    { id: 4, name: "Classic Handbag", description: "Style intemporel", price: 160, image: "https://placehold.co/300x300", category: "Handbags", stock:1 },
   ];
 
   public findAll(): Category[] {
@@ -34,6 +34,6 @@ export class CategoryRepository {
   public findProductsByCategory(id: number): Product[] {
     const category = this.findById(id);
     if (!category) return [];
-    return this.products.filter((p) => p.category === category.name);
+    return this.products.filter((p) => p.category === category.name); // this needs to be corrected
   }
 }

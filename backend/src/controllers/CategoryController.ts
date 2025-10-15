@@ -6,7 +6,7 @@ export class CategoryController {
 
   public getAll(req: Request, res: Response) {
     const categories = this.repository.findAll();
-    res.json(categories);
+    return res.json(categories);
   }
 
   public getProductsByCategory(req: Request, res: Response) {
