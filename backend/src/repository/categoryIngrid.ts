@@ -1,5 +1,5 @@
 import pool from '../libs/database';
-import { Category } from '../types/CategoryModel';
+import { Category } from '../../../frontend/src/types/CategoryModel';
 
 export class CategoryModel {
   

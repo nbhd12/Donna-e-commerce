@@ -1,4 +1,4 @@
-import { Product } from "../types/ProductModel";
+import { Product } from "../../../frontend/src/types/ProductModel";
 
 export class ProductRepository {
 
