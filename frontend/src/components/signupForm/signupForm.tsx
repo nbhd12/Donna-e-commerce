@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { signUp } from "../../services/authService";
 import "./signupForm.css";
 import { useAuthContext } from "../../contexts/authenticationContext";
 
@@ -76,7 +75,7 @@ export const SignUpForm = () => {
 
     return (
         <form className="signup" onSubmit={handleSubmit}>
-            <h1>Create Account</h1>
+            <h2>Create Account</h2>
             {error && <p className="error">{error}</p>}
 
             <input
