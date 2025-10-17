@@ -1,11 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-// import session from "express-session";
+import session from "express-session";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import productRoutes from "./routes/productRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ res.send ("Bienvenue sur  Donna e-commerce!")
 
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/users", userRoutes);
 
 
 app.listen(PORT, () => {
