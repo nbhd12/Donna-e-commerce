@@ -1,28 +1,64 @@
 import express from "express";
-import productRouter from "./routes/ProductRoutes";
-import categoryRouter from "./routes/CategoryRoutes";
+import dotenv from "dotenv";
 import cors from "cors";
+import session from "express-session";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import productRoutes from "./routes/productRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
+import userRoutes from "./routes/userRoutes";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const SESSION_SECRET = process.env.SESSION_SECRET || "defaultSecretKey";
 
 const app = express();
 
+// @ts-ignore
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
-    origin: "http://localhost:5173", 
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
 
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
-app.use("/categories", categoryRouter);
-app.use("/products", productRouter);
+app.use(express.static(path.join(__dirname, "public")));
 
 
-app.get("/", (req, res) => res.send("Donna backend fonctionne "));
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60, 
+      httpOnly: true,
+      secure: false,          
+    },
+  })
+);
 
-app.listen(5000, () => {
-  console.log("Serveur backend démarré sur le port 5000");
+app.get ("/", (req, res) => {
+res.send ("Bienvenue sur  Donna e-commerce!")
+})
+
+
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/users", userRoutes);
+
+
+app.listen(PORT, () => {
+   console.log(`Server running on: http://localhost:${PORT}`);
+   console.log(`CORS allowed from: ${FRONTEND_URL}`);
 });
