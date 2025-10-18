@@ -1,6 +1,6 @@
 
 
-import { pool } from "../libs/database";
+import  pool  from "../libs/database";
 
 export class ProductRepository {
   async findAll() {
