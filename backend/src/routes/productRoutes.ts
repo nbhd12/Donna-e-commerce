@@ -1,10 +1,16 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/ProductController";
 
-const router = Router();
-const controller = new ProductController();
+const productRouter = Router();
 
-router.get("/", controller.getAll.bind(controller));
-router.get("/:id", controller.getOne.bind(controller));
+productRouter.get("/", async (req, res) => {
+  const controller = new ProductController(req,res);
+   await controller.getAllProducts(req,res);
+});
 
-export default router;
+productRouter.get("/:id",  async(req, res) => {
+  const controller = new ProductController( req,res);
+    await controller.getProductById(req, res); 
+})
+
+export default productRouter;

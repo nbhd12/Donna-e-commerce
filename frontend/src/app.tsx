@@ -1,31 +1,22 @@
-import { CatalogPage } from "./pages/catalogPages/CatalogPage";
-import {BrowserRouter, Routes, Route} from 'react-router'
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/header/Header";
 import { Footer } from "./components/footer/Footer";
-import { AuthContextProvider } from "./contexts/authenticationContext";
-import { SignUpPage } from "./pages/signUpPage/signupPage";
-import { SignInPage } from "./pages/signInPage/signinPage";
+import { CatalogPage } from "./pages/catalog/CatalogPage";
+import { ProductPage } from "./pages/product/ProductPage";
 
 
-function App() {
-
+export default function App() {
   return (
-    <BrowserRouter> 
-    <AuthContextProvider>
-    <Header/>
-    <Routes> 
-      {/* <Route path="/" element={<Homepage/>} /> */}
-      <Route path="/Category" element={<CatalogPage/>}/>
-      {/* <Route path="/Product" element={<ShowPage/>}/>
-      <Route path="/:type/:id" element={<DetailPage/>} />
-      <Route path="/person/:id" element={<CastPage/>} /> */}
-      <Route path="/SignIn" element={<SignInPage/>} />
-      <Route path="/SignUp" element={<SignUpPage/>} /> 
-    </Routes>
-    </AuthContextProvider>
-    <Footer />  
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<CatalogPage />} />
+        <Route path="/products/:category" element={<CatalogPage />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        
+      </Routes>
+      <Footer />
     </BrowserRouter>
-);
+  );
 }
-
-export default App;

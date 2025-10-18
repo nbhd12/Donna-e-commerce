@@ -1,15 +1,12 @@
 import { Router } from "express";
 import { CategoryController } from "../controllers/CategoryController";
 
-const router = Router();
+const categoryRouter = Router();
 const controller = new CategoryController();
 
-router.get("/", (req, res) => {
-  const controller = new CategoryController();
 
-  controller.getAll(req, res);
-});
+categoryRouter.get("/", (req, res) => controller.getAllCategories(req, res));
+categoryRouter.get("/:id", (req, res) => controller.getCategoriesById(req, res));
 
-// router.get("/:id", controller.getProductsByCategory.bind(controller));
 
-export default router;
+export default categoryRouter;

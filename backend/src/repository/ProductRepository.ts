@@ -1,43 +1,62 @@
-import { Product } from "../types/ProductModel";
+import pool  from "../libs/database";
 
 export class ProductRepository {
 
-  private products: Product[] = [
-    {
-      id: 1,
-      name: "Everyday Handbag",
-      description: "Sac à main élégant pour un usage quotidien.",
-      price: 140,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "handbags",
-      stock:1
-    },
-    {
-      id: 2,
-      name: "Mini Clutch",
-      description: "Petit sac pour soirée chic.",
-      price: 95,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "clutch",
-      stock:1
-    },
-    {
-      id: 3,
-      name: "Business Tote",
-      description: "Sac pratique et élégant pour le travail.",
-      price: 180,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "handbags",
-      stock:1
-    },
-  ];
-
-
-  public findAll(): Product[] {
-    return this.products;
+  async findAll() {
+    const result = await pool.query(`
+      SELECT 
+        p.id,
+        p.name,
+        p.description,
+        p.price,
+        p.dimension,
+        p.faq,
+        p.stock,
+        p.image,
+        p.quantity,
+        c.name AS category_name
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      ORDER BY c.name, p.name;
+    `);
+    return result.rows;
   }
 
-  public findById(id: number): Product | undefined {
-    return this.products.find((p) => p.id === id);
+  
+  async findByCategory(categoryName: string) {
+    const result = await pool.query(
+      `
+      SELECT 
+        p.id,
+        p.name,
+        p.description,
+        p.price,
+        p.image,
+        p.stock,
+        c.name AS category_name
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE LOWER(c.name) = LOWER($1)
+      ORDER BY p.name;
+      `,
+      [categoryName]
+    );
+    return result.rows;
+  }
+
+
+  async findById(productId: number) {
+    const result = await pool.query(
+      `
+      SELECT 
+        p.*,
+        c.name AS category_name
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE p.id = $1;
+      `,
+      [productId]
+    );
+    return result.rows[0];
   }
 }

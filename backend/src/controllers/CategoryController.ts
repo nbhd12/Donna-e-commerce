@@ -1,22 +1,30 @@
+
 import { Request, Response } from "express";
-import { CategoryRepository } from "../repository/CategoryRepository";
+import pool from "../libs/database";
 
 export class CategoryController {
-  private repository = new CategoryRepository();
-
-  public getAll(req: Request, res: Response) {
-    const categories = this.repository.findAll();
-    return res.json(categories);
-  }
-
-  public getProductsByCategory(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const products = this.repository.findProductsByCategory(id);
-
-    if (products.length > 0) {
-      res.json(products);
-    } else {
-      res.status(404).json({ message: "Catégorie introuvable ou sans produits" });
+  async getAllCategories(req: Request, res: Response) {
+    try {
+      const result = await pool.query("SELECT * FROM categories");
+      res.json(result.rows);
+    } catch (error) {
+      res.status(500).json({ message: "Erreur lors du chargement des catégories" });
     }
   }
+
+  async getCategoriesById(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const result = await pool.query("SELECT * FROM categories WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Catégorie non trouvée" });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Erreur getCategoryById:", error);
+    res.status(500).json({ message: "Erreur lors du chargement de la catégorie" });
+  }
+}
 }

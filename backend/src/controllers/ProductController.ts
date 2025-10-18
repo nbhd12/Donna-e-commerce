@@ -1,24 +1,39 @@
 import { Request, Response } from "express";
-import { ProductRepository } from "../repository/ProductRepository";
+import pool from "../libs/database";
+import { GlobalController } from "./GlobalController";
 
-export class ProductController {
-  private repository = new ProductRepository();
-
-  
-  public getAll(req: Request, res: Response) {
-    const products = this.repository.findAll();
-    res.json(products);
+export class ProductController extends GlobalController {
+  async getAllProducts(req: Request, res: Response) {
+    try {
+      const result = await pool.query(`
+        SELECT p.*, c.name AS category_name
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        ORDER BY p.id
+      `);
+      res.json(result.rows);
+    } catch (error) {
+      res.status(500).json({ error: "Erreur lors du chargement des produits" });
+    }
   }
 
- 
-  public getOne(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const product = this.repository.findById(id);
+  async getProductById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await pool.query(
+        `SELECT p.*, c.name AS category_name
+         FROM products p
+         JOIN categories c ON p.category_id = c.id
+         WHERE p.id = $1`,
+        [id]
+      );
 
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ message: "Produit non trouvé" });
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Produit non trouvé" });
+      }
+      res.json(result.rows[0]);
+    } catch (error) {
+      res.status(500).json({ error: "Erreur lors du chargement du produit" });
     }
   }
 }
