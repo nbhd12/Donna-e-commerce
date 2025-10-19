@@ -16,13 +16,13 @@ export function Newsletter() {
 
 export function Footer() {
   return (
-    <footer className="footer">
+    <div className="footer">
       <div className="social">
         <p>Follow us:</p>
         <div className="icons">
-          <img src="/facebook.svg" alt="Facebook" />
-          <img src="/instagram.svg" alt="Instagram" />
-          <img src="/twitter.svg" alt="Twitter" />
+          <img src="../../facebook.svg" alt="Facebook" />
+          <img src="./instagram.svg" alt="Instagram" />
+          <img src="../../../twitter.svg" alt="twitter" />
         </div>
       </div>
 
@@ -54,6 +54,6 @@ export function Footer() {
         <img src="/paypal.svg" alt="PayPal" />
         <img src="/applepay.svg" alt="Apple Pay" />
       </div>
-    </footer>
+    </div>
   );
 }

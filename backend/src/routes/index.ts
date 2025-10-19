@@ -1,4 +1,13 @@
+import { Router } from "express";
+import productRoutes from "./productRoutes";
+import categoryRoutes from "./categoryRoutes";
+import userRoutes from "./userRoutes";
 
-// router.use ("/collection", collectionPage);
+const router = Router ();
 
+router.use ("/api/products", productRoutes);
+router.use ("/api/category", categoryRoutes);
+router.use ("/api/user", userRoutes);
+
+export default router;
 

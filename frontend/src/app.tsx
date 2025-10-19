@@ -14,7 +14,7 @@ function App() {
     <AuthContextProvider>
     <Header/>
     <Routes> 
-      {/* <Route path="/" element={<Homepage/>} /> */}
+      {/* <Route path="/" element={<Homepage/>} */}
       <Route path="/Category" element={<CatalogPage/>}/>
       {/* <Route path="/Product" element={<ShowPage/>}/>
       <Route path="/:type/:id" element={<DetailPage/>} />

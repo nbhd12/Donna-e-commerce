@@ -1,28 +1,36 @@
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import { Pool } from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
+export class Database {
+  private static pool: Pool;
 
-const pool = new Pool({
-  user: process.env.PGUSER, // @ingrid i changed this to .env to hide the credentials
-  password: process.env.PGPASSWORD, // @ingrid i changed this to .env to hide the credentials
-  host: process.env.PGHOST,  // @ingrid i changed this to .env to hide the credentials
-  port: process.env.PGPORT? parseInt(process.env.PGPORT, 10): undefined, // @ingrid i changes this to .env to hide the credentials
-  database: process.env.PGDATABASE,  // @ingrid i changed this to .env to hide the credentials
-  // @INGIRD - i also changed the sequence to match that of the .env file, to be consistent
-  
-});
+  static getPool(): Pool {
+    if (!Database.pool) {
+      dotenv.config();
 
-export const testConnection = async (): Promise<void> => {
-    try {
-        const client = await pool.connect();
-        console.log("Connecté au PostgreSQL")
-        client.release();
-    }   catch (error) {
-        console.error("Erreur de connexion à la base de données", error);
-        process.exit(1);
+      Database.pool = new Pool({
+        user: process.env.PGUSER,
+        password: process.env.PGPASSWORD,
+        host: process.env.PGHOST,
+        port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : undefined,
+        database: process.env.PGDATABASE,
+      });
     }
-};
 
-export default pool;
+    return Database.pool;
+  }
+
+  static async testConnection(): Promise<void> {
+    try {
+      const pool = Database.getPool();
+      const client = await pool.connect();
+      console.log("Connected to PostgreSQL");
+      client.release();
+    } catch (error) {
+      console.error("Error in connecting database", error);
+      process.exit(1);
+    }
+  }
+}
