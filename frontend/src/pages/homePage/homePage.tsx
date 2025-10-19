@@ -1,21 +1,21 @@
 // import React, { useEffect, useState } from 'react';
 // import { Link } from 'react-router-dom';
-// import { productAPI, categoryAPI } from '../services/api';
-// import { Category } from '../../../../backend/src/models/CategoryModel';
-// import './Home.css';
+// import type { Product, Category} from '../../types/api';
+// // import { Category } from '../../../../backend/src/models/CategoryModel';
+// import './homePage.css';
 
 // const HomePage: React.FC = () => {
 
-//   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
-//   const [topSelling, setTopSelling] = useState<Product[]>([]);
-//   const [categories, setCategories] = useState<Category[]>([]);
-//   const [loading, setLoading] = useState(true);
+// const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+// const [topSelling, setTopSelling] = useState<Product[]>([]);
+// const [categories, setCategories] = useState<Category[]>([]);
+// const [loading, setLoading] = useState(true);
 
 
-//   // search data to render page
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
+
+// useEffect(() => {
+// const fetchData = async () => {
+// try {
 //         setLoading(true);
 
 //         // search recent product (New Arrivals) (create api)
