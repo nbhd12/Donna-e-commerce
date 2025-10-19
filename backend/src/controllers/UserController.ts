@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { findUserByEmal, createUser } from "../repository/userRepository";
+import { userRepository } from "../repository/userRepository";
 
 const JWT_SECRET = process.env.JWT_SECRET || "SESSION_SECRET";
 
@@ -13,13 +13,19 @@ export const signup = async (req: Request, res: Response) =>{
             return res.status(400).json({message: "All fields are required."});
         }
 
-        const existingUser = await findUserByEmal(email);
+        if(password.length <4 ){
+            return res.status(400).json({message: "Password should me more than 4 characters!"})
+        }
+
+        const userRepos = new userRepository();
+
+        const existingUser = await userRepos.findUserByEmail(email);
         if (existingUser){
             return res.status(400).json({message: "Hey! This email already exists!"});
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await createUser ({first_name, last_name, email, password: hashedPassword});
+        const newUser = await userRepos.createUser ({first_name, last_name, email, password: hashedPassword});
 
         return res.status(201).json({
             message: "User registered successfully!",
@@ -41,7 +47,9 @@ export const signin = async (req:Request, res: Response)=>{
         if (!email || !password)
             return res.status(400).json({ message: "Email and password are mandatory!"});
 
-        const user = await findUserByEmal(email);
+        const userRepo = new userRepository();
+
+        const user = await userRepo.findUserByEmail(email);
         if (!user || !user.password) return res.status(401).json({ message:"Invalid credentials"});
 
         const isMatch = await bcrypt.compare(password, user.password);

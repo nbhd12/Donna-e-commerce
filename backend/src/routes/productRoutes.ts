@@ -1,10 +1,18 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/ProductController";
 
-const router = Router();
-const controller = new ProductController();
+const productRoutes = Router()
 
-router.get("/", controller.getAll.bind(controller));
-router.get("/:id", controller.getOne.bind(controller));
+productRoutes.get("/", (request,response) =>{
+    const controller = new ProductController(request,response);
+    controller.getAllProducts();
+});
 
-export default router;
+productRoutes.get("/:id", (request,response) =>{
+    const controller = new ProductController(request,response);
+    controller.getProductsById();
+});
+
+
+export default productRoutes;
+

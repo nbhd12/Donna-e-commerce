@@ -1,43 +1,23 @@
+import { Repository } from "../libs/repository";
 import { Product } from "../types/ProductModel";
 
-export class ProductRepository {
+export class ProductRepository extends Repository{
 
-  private products: Product[] = [
-    {
-      id: 1,
-      name: "Everyday Handbag",
-      description: "Sac à main élégant pour un usage quotidien.",
-      price: 140,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "handbags",
-      stock:1
-    },
-    {
-      id: 2,
-      name: "Mini Clutch",
-      description: "Petit sac pour soirée chic.",
-      price: 95,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "clutch",
-      stock:1
-    },
-    {
-      id: 3,
-      name: "Business Tote",
-      description: "Sac pratique et élégant pour le travail.",
-      price: 180,
-      image: "https://placehold.co/300x300", // @tatiana - change imageUrl to image
-      category: "handbags",
-      stock:1
-    },
-  ];
-
-
-  public findAll(): Product[] {
-    return this.products;
+  async findProduct(): Promise<Product[]> {
+    const result = await this.pool.query(
+      'SELECT * FROM Products Order by name ASC'
+    );
+    return result.rows;
+  }
+  
+  async getById(id: number): Promise <Product | null> {
+    const result = await this.pool.query(
+      'SELECT * FROM PRODUCTS WHERE id = $1',
+      [id]
+    );
+    return result.rows[0] || null;
   }
 
-  public findById(id: number): Product | undefined {
-    return this.products.find((p) => p.id === id);
-  }
+
+
 }
