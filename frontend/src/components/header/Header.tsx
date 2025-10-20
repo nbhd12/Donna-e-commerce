@@ -10,6 +10,7 @@ export function Header() {
           <li>Shop</li>;
           <li>On Sale</li>;
           <li>New Arrivals</li>
+          <li>Cart</li>
         </ul>
       </nav>
     </header>

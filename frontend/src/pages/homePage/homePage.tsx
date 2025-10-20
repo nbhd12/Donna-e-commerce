@@ -1,191 +1,184 @@
-// import React, { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { productAPI, categoryAPI } from '../services/api';
-// import { Category } from '../../../../backend/src/models/CategoryModel';
-// import './Home.css';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { productService } from '../../services/productService';
+import type { Product } from '../../types/ProductModel';
+import type { Category } from '../../types/CategoryModel';
+import bannerImage from '../../assets/banner.png';
+import './homePage.css';
 
-// const HomePage: React.FC = () => {
+const HomePage: React.FC = () => {
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [topSelling, setTopSelling] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-//   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
-//   const [topSelling, setTopSelling] = useState<Product[]>([]);
-//   const [categories, setCategories] = useState<Category[]>([]);
-//   const [loading, setLoading] = useState(true);
+  const categories: Category[] = [
+    {
+      id: 1,
+      name: 'Hand Bags',
+      description: 'Urna duis pellentesque vestibulum aliquet pharetra cursus aliquet orci.',
+      image: '/cat1.png'
+    },
+    {
+      id: 2,
+      name: 'Sling Bags',
+      description: 'Urna duis pellentesque vestibulum aliquet pharetra cursus aliquet orci.',
+      image: '/cat2.png'
+    },
+    {
+      id: 3,
+      name: 'Tote Bags',
+      description: 'Urna duis pellentesque vestibulum aliquet pharetra cursus aliquet orci.',
+      image: 'cat3'
+    },
+    {
+      id: 4,
+      name: 'Mini Bags',
+      description: 'Urna duis pellentesque vestibulum aliquet pharetra cursus aliquet orci.',
+      image: '../cat4'
+    }
+  ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        const allProducts = await productService.getAll();
+        console.log('Products loaded:', allProducts);
+        
+        if (allProducts.length > 0) {
+    
+          const arrivals = allProducts.slice(0, 4);
+          setNewArrivals(arrivals);
+          
+          const selling = allProducts.length > 4 
+            ? allProducts.slice(4, 8) 
+            : allProducts.slice(0, 4);
+          setTopSelling(selling);
+        }
+        
+      } catch (error) {
+        console.error('Error loading products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-//   // search data to render page
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         setLoading(true);
+    fetchData();
+  }, []);
 
-//         // search recent product (New Arrivals) (create api)
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
-//         const recentProducts = await productAPI.getRecent(4);
-//         setNewArrivals(recentProducts);
-
-//         // search top selling product (create api)
-
-
-//         const allProducts = await productAPI.getAll();
-//         setTopSelling(allProducts.slice(0, 4));
-
-//         // search by category (create api)
-
-//         const categoriesData = await categoryAPI.getAll();
-//         setCategories(categoriesData);
-
-
-//       } catch (error) {
-//         console.error('Error', error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//   }, []); 
-
-
-
-//   // pics for types of bags
-
-//   const getCategoryIcon = (categoryName: string) => {
-//     const icons: { [key: string]: string } = {
-//       'Tote': 'Tote.png',
-//       'Handbag': 'Handbag.png',
-//       'Backpack': 'Backpack.png',
-//       'Sling': 'Sling.png'
-//     };
-//     return icons[categoryName] || 'Purses';
-//   };
-
-//   // Show loading while loading page
-
-//   if (loading) {
-//     return <div className="loading">Charging...</div>;
-//   }
-
-//  return (
-//     <div className="home-container">
-
-//       //main banner
+  return (
+    <div className="homepage">
       
-//       <section className="banner-hero">
-//         <img 
-//           src="/images/banner-principal.jpg" 
-//           alt="Banner Principal"
-//           className="banner-image"
-//           onError={(e) => {
-//             // Se a imagem não carregar, mostra um banner com cor
-//             (e.target as HTMLImageElement).style.display = 'none';
-//             (e.target as HTMLImageElement).parentElement!.style.background = 
-//               'linear-gradient(135deg, #9b7f9f 0%, #7d5f7f 100%)';
-//           }}
-//         />
-//       </section>
+      <section className="banner-section">
+        <img 
+          src={bannerImage}
+          alt="Donna Banner"
+          className="banner-image"
+        />
+      </section>
 
-
-// // new arrivals
-//       <section className="content-section">
-//         <h2 className="section-heading">NEW ARRIVALS</h2>
+      <section className="products-section">
+        <h2 className="section-title">NEW ARRIVALS</h2>
         
-//         <div className="products-grid">
-//           {newArrivals.map((product) => (
-//             <Link 
-//               to={`/product/${product.id}`} 
-//               key={product.id} 
-//               className="product-item"
-//             >
+        {newArrivals.length === 0 ? (
+          <p className="no-products">No products available</p>
+        ) : (
+          <div className="products-grid">
+            {newArrivals.map((product) => (
+              <Link 
+                to={`/product/${product.id}`} 
+                key={product.id} 
+                className="product-card"
+              >
+                <div className="product-image">
+                  <img 
+                    src={product.image || 'https://via.placeholder.com/300x300?text=No+Image'} 
+                    alt={product.name}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+                    }}
+                  />
+                </div>
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-price">€{product.price.toFixed(0)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
 
-//               // image/pic
-//               <div className="product-img">
-//                 <img 
-//                   src={product.image || '/placeholder.png'} 
-//                   alt={product.name}
-//                   onError={(e) => {
-//                     (e.target as HTMLImageElement).src = '/placeholder.png';
-//                   }}
-//                 />
-//               </div>
-
-//               // info
-              
-//               <div className="product-details">
-//                 <p className="product-title">{product.name}</p>
-//                 <p className="product-cost">€{product.price.toFixed(2)}</p>
-//               </div>
-//             </Link>
-//           ))}
-//         </div>
-//       </section>
-
-//       // top selling
-
-//       <section className="content-section">
-//         <h2 className="section-heading">TOP SELLING</h2>
+      <section className="products-section">
+        <h2 className="section-title">TOP SELLING</h2>
         
-//         <div className="products-grid">
-//           {topSelling.map((product) => (
-//             <Link 
-//               to={`/product/${product.id}`} 
-//               key={product.id} 
-//               className="product-item"
-//             >
-//               <div className="product-img">
-//                 <img 
-//                   src={product.image || '/placeholder.png'} 
-//                   alt={product.name}
-//                   onError={(e) => {
-//                     (e.target as HTMLImageElement).src = '/placeholder.png';
-//                   }}
-//                 />
-//               </div>
-              
-//               <div className="product-details">
-//                 <p className="product-title">{product.name}</p>
-//                 <p className="product-cost">€{product.price.toFixed(2)}</p>
-//               </div>
-//             </Link>
-//           ))}
-//         </div>
-//       </section>
+        {topSelling.length === 0 ? (
+          <p className="no-products">No products available</p>
+        ) : (
+          <div className="products-grid">
+            {topSelling.map((product) => (
+              <Link 
+                to={`/product/${product.id}`} 
+                key={product.id} 
+                className="product-card"
+              >
+                <div className="product-image">
+                  <img 
+                    src={product.image || 'https://via.placeholder.com/300x300?text=No+Image'} 
+                    alt={product.name}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+                    }}
+                  />
+                </div>
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-price">€{product.price.toFixed(0)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
 
-//       //browse by style
-
-//       <section className="content-section">
-//         <h2 className="section-heading">BROWSE BY STYLE</h2>
+      <section className="categories-section">
+        <h2 className="section-title">BROWSE BY STYLE</h2>
         
-//         <div className="categories-grid">
-//           {categories.map((category) => (
-//             <Link 
-//               to="/categories" 
-//               key={category.id} 
-//               className="category-box"
-//             >
-//               //background image
+        <div className="categories-grid">
+          {categories.map((category) => (
+            <Link 
+              to={`/category?type=${category.name.toLowerCase().replace(' ', '-')}`}
+              key={category.id} 
+              className="category-card"
+            >
+              <div className="category-image">
+                <img 
+                  src={category.image} 
+                  alt={category.name}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/300x300?text=Category';
+                  }}
+                />
+              </div>
+              <div className="category-content">
+                <h3 className="category-name">{category.name}</h3>
+                <p className="category-description">{category.description}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-//               <div className="category-bg">
-//                 <img 
-//                   src={category.image || '/placeholder.png'} 
-//                   alt={category.name}
-//                   onError={(e) => {
-//                     (e.target as HTMLImageElement).src = '/placeholder.png';
-//                   }}
-//                 />
-//               </div>
-              
-//               //text over image
-//               <div className="category-info">
-//                 <span className="category-emoji">{getCategoryIcon(category.name)}</span>
-//                 <h3 className="category-label">{category.name}</h3>
-//               </div>
-//             </Link>
-//           ))}
-//         </div>
-//       </section>
+    </div>
+  );
+};
 
-//     </div>
-//   );
-// };
-
-// export default HomePage;
+export default HomePage;

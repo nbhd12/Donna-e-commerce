@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { cartState } from '../../types/cart';
 import { cartApi } from '../../services/cartApi';
-import './Cart.css';
+// import './Cart.css';
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<cartState>({
