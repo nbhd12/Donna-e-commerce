@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { cartState } from '../../types/cart';
 import { cartApi } from '../../services/cartApi';
-// import './Cart.css';
+import './cartPage.css';
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<cartState>({
@@ -12,10 +12,10 @@ const Cart: React.FC = () => {
   });
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [discountApplied, setDiscountApplied] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // load cart when component mounts
   useEffect(() => {
     loadCart();
   }, []);
@@ -29,13 +29,11 @@ const Cart: React.FC = () => {
     }
   };
 
-  // calculations
   const subtotal = cart.subTotal;
   const discountAmount = (subtotal * discount) / 100;
   const deliveryFee = 15;
   const total = subtotal - discountAmount + deliveryFee;
 
-  // increase quantity
   const increaseQuantity = async (productId: number) => {
     const item = cart.items.find(i => i.productId === productId);
     if (!item) return;
@@ -48,7 +46,6 @@ const Cart: React.FC = () => {
     }
   };
 
-  // decrease quantity
   const decreaseQuantity = async (productId: number) => {
     const item = cart.items.find(i => i.productId === productId);
     if (!item || item.quantity <= 1) return;
@@ -61,19 +58,15 @@ const Cart: React.FC = () => {
     }
   };
 
-  // remove item
   const removeItem = async (productId: number) => {
-    if (window.confirm('Remove this item?')) {
-      try {
-        const updatedCart = await cartApi.removeFromCart(productId);
-        setCart(updatedCart);
-      } catch (error) {
-        alert('Error removing item');
-      }
+    try {
+      const updatedCart = await cartApi.removeFromCart(productId);
+      setCart(updatedCart);
+    } catch (error) {
+      alert('Error removing item');
     }
   };
 
-  // apply promo code
   const applyPromoCode = () => {
     const promoCodes: { [key: string]: number } = {
       'SAVE20': 20,
@@ -85,14 +78,15 @@ const Cart: React.FC = () => {
 
     if (promoCodes[code]) {
       setDiscount(promoCodes[code]);
-      alert(`Code applied! ${promoCodes[code]}% discount`);
+      setDiscountApplied(true);
+      alert(`Promo code applied! ${promoCodes[code]}% discount`);
     } else {
-      alert('Invalid code');
+      alert('Invalid promo code');
       setDiscount(0);
+      setDiscountApplied(false);
     }
   };
 
-  // place order
   const handlePlaceOrder = async () => {
     if (cart.items.length === 0) {
       alert('Your cart is empty');
@@ -101,7 +95,6 @@ const Cart: React.FC = () => {
 
     try {
       setLoading(true);
-      // order creation logic will be implemented later
       alert('Order confirmed!');
       navigate('/orders');
     } catch (error) {
@@ -114,6 +107,7 @@ const Cart: React.FC = () => {
   return (
     <div className="cart-page">
       <div className="cart-container">
+        
         <div className="cart-left">
           <h1 className="cart-title">YOUR CART</h1>
 
@@ -134,38 +128,36 @@ const Cart: React.FC = () => {
                   
                   <div className="cart-item-image">
                     <img
-                      src={item.photo || '/placeholder.png'}
+                      src={item.photo || 'https://via.placeholder.com/150'}
                       alt={item.name}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/placeholder.png';
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150';
                       }}
                     />
                   </div>
 
-                  
                   <div className="cart-item-details">
                     <div className="cart-item-header">
-                      <div>
+                      <div className="cart-item-info">
                         <h3 className="cart-item-name">{item.name}</h3>
-                        <p className="cart-item-description">{item.description}</p>
+                        <p className="cart-item-color">Color: White</p>
                       </div>
-
+                      
                       <button
                         onClick={() => removeItem(item.productId)}
-                        className="btn-remove"
+                        className="btn-delete"
                         title="Remove item"
                       >
-                        ✕
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="3 6 5 6 21 6"/>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
                       </button>
                     </div>
 
-                    
                     <div className="cart-item-footer">
-                      <p className="cart-item-price">
-                        €{item.price.toFixed(2)}
-                      </p>
+                      <p className="cart-item-price">€{item.price.toFixed(0)}</p>
 
-                      
                       <div className="quantity-control">
                         <button
                           onClick={() => decreaseQuantity(item.productId)}
@@ -190,42 +182,42 @@ const Cart: React.FC = () => {
           )}
         </div>
 
-        
         <div className="cart-right">
           <div className="order-summary">
             <h2 className="summary-title">Order Summary</h2>
 
-            
             <div className="summary-row">
               <span className="summary-label">Subtotal</span>
-              <span className="summary-value">€{subtotal.toFixed(2)}</span>
+              <span className="summary-value">€{subtotal.toFixed(0)}</span>
             </div>
 
-            
             {discount > 0 && (
               <div className="summary-row discount-row">
                 <span className="summary-label">Discount (-{discount}%)</span>
-                <span className="summary-value discount">
-                  -€{discountAmount.toFixed(2)}
+                <span className="summary-value discount-value">
+                  -€{discountApplied ? discountAmount.toFixed(0) : '0'}
                 </span>
               </div>
             )}
 
             <div className="summary-row">
               <span className="summary-label">Delivery Fee</span>
-              <span className="summary-value">€{deliveryFee.toFixed(2)}</span>
+              <span className="summary-value">€{deliveryFee}</span>
             </div>
 
             <div className="summary-divider"></div>
 
             <div className="summary-row total-row">
               <span className="summary-label">Total</span>
-              <span className="summary-value total">€{total.toFixed(2)}</span>
+              <span className="summary-value">€{total.toFixed(0)}</span>
             </div>
 
             <div className="promo-code-section">
               <div className="promo-input-wrapper">
-                <span className="promo-icon">🏷️</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="promo-icon">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                  <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
                 <input
                   type="text"
                   placeholder="Add promo code"
@@ -243,7 +235,6 @@ const Cart: React.FC = () => {
               </button>
             </div>
 
-            
             <button
               onClick={handlePlaceOrder}
               className="btn-place-order"
@@ -253,6 +244,7 @@ const Cart: React.FC = () => {
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );

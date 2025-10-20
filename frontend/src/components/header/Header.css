@@ -1,39 +1,199 @@
+/* ========== Header Container ========== */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 60px;
   background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
+  transition: all 0.3s ease;
 }
 
+/* ========== Logo ========== */
 .logo {
   font-family: "Playfair Display", serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: #222;
   letter-spacing: 1px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #8b6f7d;
+}
+
+/* ========== Navigation Menu ========== */
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .menu {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   list-style: none;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
 
 .menu li {
+  position: relative;
+}
+
+.menu li a {
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
   color: #444;
+  text-decoration: none;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
+  padding: 5px 0;
+  display: inline-block;
 }
 
-.menu li:hover {
-  color: #e67e22;
+.menu li a:hover {
+  color: #8b6f7d;
+}
+
+/* Active link indicator */
+.menu li.active a {
+  color: #8b6f7d;
+  font-weight: 500;
+}
+
+.menu li.active a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #8b6f7d;
+}
+
+/* ========== Header Actions (Icons) ========== */
+.header-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #444;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background: #f5f5f5;
+  color: #8b6f7d;
+}
+
+/* Cart Button with Badge */
+.cart-btn {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #8b6f7d;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* ========== Responsive Design ========== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .header {
+    padding: 15px 30px;
+  }
+
+  .menu {
+    gap: 25px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .menu {
+    display: none; /* Hide menu on mobile - you can add hamburger menu later */
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .header-actions {
+    gap: 15px;
+  }
+}
+
+/* Mobile Menu Toggle (Optional - for hamburger menu) */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+    background: none;
+    border: none;
+    color: #444;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .menu.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+  }
+}
+
+/* ========== Animations ========== */
+.icon-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.icon-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Smooth scroll effect when header becomes sticky */
+.header.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
